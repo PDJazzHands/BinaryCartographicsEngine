@@ -1,7 +1,6 @@
-﻿using BinaryCartographicsEngine.BCEngine.Text.Conversion;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace BinaryCartographicsEngine.BCEngine.Text.Rendering
+namespace BinaryCartographicsEngine.BCEngine.Text
 {
     public struct TextChar
     {

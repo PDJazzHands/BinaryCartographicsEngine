@@ -1,7 +1,7 @@
 ﻿using BinaryCartographicsEngine.Engine.Utilities.Dictionaries;
 using Microsoft.Xna.Framework;
 
-namespace BinaryCartographicsEngine.BCEngine.Text.Conversion
+namespace BinaryCartographicsEngine.BCEngine.Text
 {
     public static class TextConvertor
     {

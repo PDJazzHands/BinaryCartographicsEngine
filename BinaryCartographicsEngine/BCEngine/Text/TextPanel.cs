@@ -1,9 +1,8 @@
-﻿using BinaryCartographicsEngine.BCEngine.Text.Conversion;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BinaryCartographicsEngine.BCEngine.Text.Rendering
+namespace BinaryCartographicsEngine.BCEngine.Text
 {
     public class TextPanel //: TextRendererBase
     {

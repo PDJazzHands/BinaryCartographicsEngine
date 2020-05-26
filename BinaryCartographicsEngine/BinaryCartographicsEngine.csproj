@@ -43,11 +43,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BCEngine\BCEngine.cs" />
-    <Compile Include="BCEngine\Text\Rendering\TextBuffer.cs" />
-    <Compile Include="BCEngine\Text\Rendering\TextChar.cs" />
-    <Compile Include="BCEngine\Text\Conversion\TextConvertor.cs" />
-    <Compile Include="BCEngine\Text\Rendering\TextFont.cs" />
-    <Compile Include="BCEngine\Text\Rendering\TextPanel.cs" />
+    <Compile Include="BCEngine\Forms\Control.cs" />
+    <Compile Include="BCEngine\Forms\ControlEvents.cs" />
+    <Compile Include="BCEngine\Forms\TestControl.cs" />
+    <Compile Include="BCEngine\Input\GamepadEventArgs.cs" />
+    <Compile Include="BCEngine\Input\KeyEventArgs.cs" />
+    <Compile Include="BCEngine\Input\MouseEventArgs.cs" />
+    <Compile Include="BCEngine\Input\InputManager.cs" />
+    <Compile Include="BCEngine\Text\TextBuffer.cs" />
+    <Compile Include="BCEngine\Text\TextChar.cs" />
+    <Compile Include="BCEngine\Text\TextConvertor.cs" />
+    <Compile Include="BCEngine\Text\TextFont.cs" />
+    <Compile Include="BCEngine\Text\TextPanel.cs" />
     <Compile Include="BCEngine\Utilities\Dictionaries\TwoWayDictionary.cs" />
     <Compile Include="BCCore.cs" />
     <Compile Include="BCGame\BCGame.cs" />
