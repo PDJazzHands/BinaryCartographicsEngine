@@ -43,13 +43,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BCEngine\BCEngine.cs" />
+    <Compile Include="BCEngine\Forms\Container.cs" />
     <Compile Include="BCEngine\Forms\Control.cs" />
-    <Compile Include="BCEngine\Forms\ControlEvents.cs" />
-    <Compile Include="BCEngine\Forms\TestControl.cs" />
+    <Compile Include="BCEngine\Forms\Panel.cs" />
     <Compile Include="BCEngine\Input\GamepadEventArgs.cs" />
     <Compile Include="BCEngine\Input\KeyEventArgs.cs" />
     <Compile Include="BCEngine\Input\MouseEventArgs.cs" />
     <Compile Include="BCEngine\Input\InputManager.cs" />
+    <Compile Include="BCEngine\Math\Transform.cs" />
     <Compile Include="BCEngine\Text\TextBuffer.cs" />
     <Compile Include="BCEngine\Text\TextChar.cs" />
     <Compile Include="BCEngine\Text\TextConvertor.cs" />
