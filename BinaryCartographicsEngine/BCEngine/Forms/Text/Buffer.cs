@@ -1,13 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using BinaryCartographicsEngine.BCEngine.Math;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BinaryCartographicsEngine.BCEngine.Text
+namespace BinaryCartographicsEngine.BCEngine.Forms.Text
 {
-    public class TextBuffer
+    public class Buffer
     {
         private static Point ClearCharCoordinate = new Point(0, 2);
         private static TextChar ClearTile = new TextChar(Color.Transparent, Color.Transparent, ClearCharCoordinate);
-        private static TextChar[,] CharArray;
+        private TextChar[,] CharArray;
 
         private static int bufferWidth;
         public int BufferWidth
@@ -16,12 +18,12 @@ namespace BinaryCartographicsEngine.BCEngine.Text
         }
 
         private static int bufferHeight;
-        public int BufferHeight
+        public static int BufferHeight
         {
             get { return bufferHeight; }
         }
 
-        private static Point cursorPosition;
+        private Point cursorPosition;
         public Point CursorPosition
         {
             get { return cursorPosition; }
@@ -31,7 +33,7 @@ namespace BinaryCartographicsEngine.BCEngine.Text
             }
         }
 
-        public static void SetCursorPosition(Point position)
+        public void SetCursorPosition(Point position)
         {
             cursorPosition = new Point(
                 MathHelper.Clamp(position.X, 0, bufferWidth),
@@ -39,7 +41,7 @@ namespace BinaryCartographicsEngine.BCEngine.Text
                 );
         }
 
-        public static void SetCursorPosition(int X, int Y)
+        public void SetCursorPosition(int X, int Y)
         {
             cursorPosition = new Point(
                 MathHelper.Clamp(X, 0, bufferWidth),
@@ -47,20 +49,22 @@ namespace BinaryCartographicsEngine.BCEngine.Text
                 );
         }
 
-        private static void IncrementCursorPosition()
+        private void IncrementCursorPosition()
         {
-            cursorPosition.X++;
-            if (cursorPosition.X >= bufferWidth)
+            int xPos = cursorPosition.X + 1;
+            int yPos = cursorPosition.Y;
+            if (xPos >= bufferWidth)
             {
-                cursorPosition.X = 0;
+                xPos = 0;
                 if (cursorPosition.Y < bufferHeight)
                 {
-                    cursorPosition.Y++;
+                    yPos++;
                 }
             }
+            SetCursorPosition(xPos, yPos);
         }
 
-        public TextBuffer(int Width, int Height)
+        public Buffer(int Width, int Height)
         {
             bufferWidth = Width;
             bufferHeight = Height;
@@ -68,7 +72,7 @@ namespace BinaryCartographicsEngine.BCEngine.Text
             Clear();
         }
 
-        public static void Clear()
+        public void Clear()
         {
             for (int y = 0; y < CharArray.GetLength(1); y++)
             {
@@ -79,7 +83,7 @@ namespace BinaryCartographicsEngine.BCEngine.Text
             }
             SetCursorPosition(Point.Zero);
         }
-        public static void Clear(char Char, Color ForeColor, Color BackColor)
+        public void Clear(char Char, Color ForeColor, Color BackColor)
         {
             for (int y = 0; y < CharArray.GetLength(1); y++)
             {
@@ -91,25 +95,25 @@ namespace BinaryCartographicsEngine.BCEngine.Text
             SetCursorPosition(Point.Zero);
         }
 
-        public static void Write(char Char, Color ForeColor, Color BackColor)
+        public void Write(char Char, Color ForeColor, Color BackColor)
         {
             CharArray[cursorPosition.X, cursorPosition.Y] = new TextChar(ForeColor, BackColor, Char);
             IncrementCursorPosition();
         }
-        public static void Write(char Char, Color ForeColor, Color BackColor, Point position)
+        public void Write(char Char, Color ForeColor, Color BackColor, Point position)
         {
             SetCursorPosition(position);
             CharArray[cursorPosition.X, cursorPosition.Y] = new TextChar(ForeColor, BackColor, Char);
             IncrementCursorPosition();
         }
-        public static void Write(char Char, Color ForeColor, Color BackColor, int X, int Y)
+        public void Write(char Char, Color ForeColor, Color BackColor, int X, int Y)
         {
             SetCursorPosition(X, Y);
             CharArray[cursorPosition.X, cursorPosition.Y] = new TextChar(ForeColor, BackColor, Char);
             IncrementCursorPosition();
         }
 
-        public static void Write(string String, Color ForeColor, Color BackColor)
+        public void Write(string String, Color ForeColor, Color BackColor)
         {
             int position = cursorPosition.X;
             foreach (char c in String)
@@ -125,7 +129,7 @@ namespace BinaryCartographicsEngine.BCEngine.Text
                 }
             }
         }
-        public static void Write(string String, Color ForeColor, Color BackColor, Point position)
+        public void Write(string String, Color ForeColor, Color BackColor, Point position)
         {
             SetCursorPosition(position);
             foreach (char c in String)
@@ -141,7 +145,7 @@ namespace BinaryCartographicsEngine.BCEngine.Text
                 }
             }
         }
-        public static void Write(string String, Color ForeColor, Color BackColor, int X, int Y)
+        public void Write(string String, Color ForeColor, Color BackColor, int X, int Y)
         {
             SetCursorPosition(X, Y);
             foreach (char c in String)
@@ -158,8 +162,12 @@ namespace BinaryCartographicsEngine.BCEngine.Text
             }
         }
 
+        public Vector2 RotateAboutOrigin(Vector2 point, Vector2 origin, float rotation)
+        {
+            return Vector2.Transform(point - origin, Matrix.CreateRotationZ(rotation)) + origin;
+        }
 
-        public static void Draw(TextFont TextFont, SpriteBatch spriteBatch, Point Location)
+        public void Draw(TextFont TextFont, SpriteBatch spriteBatch, Transform worldTransform)
         {
             for (int y = 0; y < CharArray.GetLength(1); y++)
             {
@@ -167,14 +175,17 @@ namespace BinaryCartographicsEngine.BCEngine.Text
                 {
                     Point SamplePos = new Point(CharArray[x, y].SamplePosition.X * TextFont.CharSize.X, CharArray[x, y].SamplePosition.Y * TextFont.CharSize.Y);
                     Rectangle SourceRect = new Rectangle(SamplePos, TextFont.CharSize);
-                    Vector2 Position = new Vector2(x * TextFont.CharSize.X + Location.X, y * TextFont.CharSize.Y + Location.Y);
-
+                    //location is the input draw location, apply this to the draw method of the render target, not here
+                    Vector2 Position = new Vector2(x * TextFont.CharSize.X, y * TextFont.CharSize.Y);
+                    Position *= worldTransform.Scale;
+                    Position = RotateAboutOrigin(Position, Vector2.Zero, worldTransform.Rotation);
 
                     TextFont.FontEffect.Parameters["ForeColor"].SetValue(CharArray[x, y].ForeColor.ToVector4());
                     TextFont.FontEffect.Parameters["BackColor"].SetValue(CharArray[x, y].BackColor.ToVector4());
                     TextFont.FontEffect.CurrentTechnique.Passes[0].Apply();
-
-                    spriteBatch.Draw(TextFont.FontSheet, Position, SourceRect, Color.White);
+                    //spriteBatch.Draw(TextFont.FontSheet, Position, SourceRect, Color.White);
+                    
+                    spriteBatch.Draw(TextFont.FontSheet, worldTransform.WorldPosition + Position, SourceRect, Color.White, worldTransform.WorldRotation, Vector2.Zero, worldTransform.WorldScale, SpriteEffects.None, 0f);
                 }
             }
         }

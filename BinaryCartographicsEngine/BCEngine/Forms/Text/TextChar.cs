@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace BinaryCartographicsEngine.BCEngine.Text
+namespace BinaryCartographicsEngine.BCEngine.Forms.Text
 {
+
     public struct TextChar
     {
         public readonly Color ForeColor;

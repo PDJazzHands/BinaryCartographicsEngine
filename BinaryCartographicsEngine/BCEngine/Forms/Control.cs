@@ -1,6 +1,7 @@
 ﻿using System;
 using BinaryCartographicsEngine.BCEngine.Input;
 using BinaryCartographicsEngine.BCEngine.Math;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BinaryCartographicsEngine.BCEngine.Forms
@@ -9,39 +10,32 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
     /// The base Control type for all BCForms controls to derive from
     /// See ControlEvents.cs for events and handlers
     /// </summary>
-    public partial class Control
+    public partial class Control : Transform
     {
-        public Transform Transform;
-        public Transform LocalTransform
-        {
-            get { return Transform; }
-        }
-        public Transform WorldTransform
-        {
-            get
-            {
-                return IsChild ?
-                Transform.Compose(Transform, Parent.Transform) :
-                Transform;
-            }
-        }
-
-
-        #region Base properties
-        public bool IsChild { get; }
-        public Control Parent { get; } 
-        public bool IsEnabled { get; }
-        #endregion
-
         public Control() { }
-        public Control(Control parent)
-        {
-            IsChild = true;
-            Parent = parent;
-        }
+        public Control(Transform Parent) : base(Parent) { }
 
         public virtual void Update() { }
         public virtual void Draw(SpriteBatch spriteBatch) { }
+
+        public bool Contains(Rectangle rect, float rectAngle, Point point)
+        {
+            // rotate around rectangle center by -rectAngle
+            var s = System.Math.Sin(-rectAngle);
+            var c = System.Math.Cos(-rectAngle);
+
+            // set origin to rect center
+            var newPoint = point - rect.Size;
+            // rotate
+            newPoint = new Point((int)(newPoint.X * c - newPoint.Y * s), (int)(newPoint.X * s + newPoint.Y * c));
+            // put origin back
+            newPoint = newPoint + rect.Size;
+
+            // check if our transformed point is in the rectangle, which is no longer
+            // rotated relative to the point
+
+            return rect.Contains(newPoint);
+        }
 
         #region Mouse events and handlers
         /// <summary>

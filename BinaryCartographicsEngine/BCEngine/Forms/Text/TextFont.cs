@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BinaryCartographicsEngine.BCEngine.Text
+namespace BinaryCartographicsEngine.BCEngine.Forms.Text
 {
     public class TextFont
     {

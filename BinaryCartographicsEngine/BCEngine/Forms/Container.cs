@@ -7,12 +7,10 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
 {
     public class Container : Control
     {
-
-
         public List<Control> Controls = new List<Control>();
 
         public Container() { }
-        public Container(Control Parent) : base(Parent) { }
+        public Container(Transform Parent) : base(Parent) { }
 
         public override void Update()
         {
@@ -29,7 +27,7 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
             {
                 c.Draw(spriteBatch);
             }
-            base.Update();
+            base.Draw(spriteBatch);
         }
     }
 }

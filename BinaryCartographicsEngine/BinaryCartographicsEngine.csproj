@@ -43,19 +43,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BCEngine\BCEngine.cs" />
+    <Compile Include="BCEngine\Forms\Button.cs" />
     <Compile Include="BCEngine\Forms\Container.cs" />
     <Compile Include="BCEngine\Forms\Control.cs" />
     <Compile Include="BCEngine\Forms\Panel.cs" />
+    <Compile Include="BCEngine\Forms\TextBox.cs" />
+    <Compile Include="BCEngine\Forms\Text\Buffer.cs" />
+    <Compile Include="BCEngine\Forms\Text\TextFont.cs" />
+    <Compile Include="BCEngine\Forms\Text\TextControl.cs" />
+    <Compile Include="BCEngine\Forms\Text\TextChar.cs" />
+    <Compile Include="BCEngine\Forms\Text\TextConvertor.cs" />
     <Compile Include="BCEngine\Input\GamepadEventArgs.cs" />
     <Compile Include="BCEngine\Input\KeyEventArgs.cs" />
     <Compile Include="BCEngine\Input\MouseEventArgs.cs" />
     <Compile Include="BCEngine\Input\InputManager.cs" />
     <Compile Include="BCEngine\Math\Transform.cs" />
-    <Compile Include="BCEngine\Text\TextBuffer.cs" />
-    <Compile Include="BCEngine\Text\TextChar.cs" />
-    <Compile Include="BCEngine\Text\TextConvertor.cs" />
-    <Compile Include="BCEngine\Text\TextFont.cs" />
-    <Compile Include="BCEngine\Text\TextPanel.cs" />
     <Compile Include="BCEngine\Utilities\Dictionaries\TwoWayDictionary.cs" />
     <Compile Include="BCCore.cs" />
     <Compile Include="BCGame\BCGame.cs" />
