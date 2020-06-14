@@ -14,27 +14,34 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
     {
         public Control() { }
         public Control(Transform Parent) : base(Parent) { }
+        public Control(Transform Parent, int Width, int Height) : base(Parent)
+        {
+            this.Width = Width;
+            this.Height = Height;
+            localBounds = new Rectangle(0, 0, Width, Height);
+        }
 
         public virtual void Update() { }
         public virtual void Draw(SpriteBatch spriteBatch) { }
 
-        public bool Contains(Rectangle rect, float rectAngle, Point point)
+        private Rectangle localBounds;
+        public Rectangle LocalBounds { get { return localBounds; } set { localBounds = value; } }
+        public int Width
+        {
+            get { return localBounds.Width; }
+            set { localBounds = new Rectangle(localBounds.Location, new Point(value, localBounds.Height)); }
+        }
+        public int Height
+        {
+            get { return localBounds.Height; }
+            set { localBounds = new Rectangle(localBounds.Location, new Point(localBounds.Width, value)); }
+        }
+
+        public bool Contains(Rectangle LocalRect, Vector2 WorldPoint)
         {
             // rotate around rectangle center by -rectAngle
-            var s = System.Math.Sin(-rectAngle);
-            var c = System.Math.Cos(-rectAngle);
-
-            // set origin to rect center
-            var newPoint = point - rect.Size;
-            // rotate
-            newPoint = new Point((int)(newPoint.X * c - newPoint.Y * s), (int)(newPoint.X * s + newPoint.Y * c));
-            // put origin back
-            newPoint = newPoint + rect.Size;
-
-            // check if our transformed point is in the rectangle, which is no longer
-            // rotated relative to the point
-
-            return rect.Contains(newPoint);
+            Vector2 WorldToLocal = InverseTransformVector(WorldPoint);
+            return LocalRect.Contains(WorldToLocal);
         }
 
         #region Mouse events and handlers
@@ -43,25 +50,25 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
         /// </summary>
         // Mouse button was pressed down
         public event EventHandler MousePressHandler;
-        protected void OnMousePress(MouseEventArgs e)
+        public virtual void OnMousePress(MouseEventArgs e)
         {
             MousePressHandler?.Invoke(this, e);
         }
         // Mouse button was released
         public event EventHandler MouseReleaseHandler;
-        protected void OnMouseRelease(MouseEventArgs e)
+        public virtual void OnMouseRelease(MouseEventArgs e)
         {
             MouseReleaseHandler?.Invoke(this, e);
         }
         // Mouse begun hovering over a control
         public event EventHandler MouseEnterHandler;
-        protected void OnMouseEnter(MouseEventArgs e)
+        public virtual void OnMouseEnter(MouseEventArgs e)
         {
             MouseEnterHandler?.Invoke(this, e);
         }
         // Mouse stopped hovering over a control
         public event EventHandler MouseLeaveHandler;
-        protected void OnMouseLeave(MouseEventArgs e)
+        public virtual void OnMouseLeave(MouseEventArgs e)
         {
             MouseLeaveHandler?.Invoke(this, e);
         }
@@ -71,13 +78,13 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
         /// </summary>
         // Mouse button is currently down
         public event EventHandler MouseDownHandler;
-        protected void IsMouseDown(MouseEventArgs e)
+        public virtual void IsMouseDown(MouseEventArgs e)
         {
             MouseDownHandler?.Invoke(this, e);
         }
         // Mouse cursor is currently over a control
         public event EventHandler MouseHoverHandler;
-        protected void IsMouseHover(MouseEventArgs e)
+        public virtual void IsMouseHover(MouseEventArgs e)
         {
             MouseHoverHandler?.Invoke(this, e);
         }
@@ -89,13 +96,13 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
         /// </summary
         // key was pressed down
         public event EventHandler KeyPressHandler;
-        protected void OnKeyPress(KeyEventArgs e)
+        protected virtual void OnKeyPress(KeyEventArgs e)
         {
             KeyPressHandler?.Invoke(this, e);
         }
         // Key was released
         public event EventHandler KeyReleaseHandler;
-        protected void OnKeyRelease(KeyEventArgs e)
+        protected virtual void OnKeyRelease(KeyEventArgs e)
         {
             KeyReleaseHandler?.Invoke(this, e);
         }
@@ -105,13 +112,13 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
         /// </summary>
         // Key is currently down
         public event EventHandler KeyDownHandler;
-        protected void IsKeyDown(KeyEventArgs e)
+        protected virtual void IsKeyDown(KeyEventArgs e)
         {
             KeyDownHandler?.Invoke(this, e);
         }
         // Key is currently up
         public event EventHandler KeyUpHandler;
-        protected void IsKeyUp(KeyEventArgs e)
+        protected virtual void IsKeyUp(KeyEventArgs e)
         {
             KeyUpHandler?.Invoke(this, e);
         }
@@ -134,7 +141,7 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
         /// One shot Control events 
         /// </summary>
         public event EventHandler OnControlAddedHandler;
-        protected void OnControlAdded(KeyEventArgs e)
+        protected virtual void OnControlAdded(KeyEventArgs e)
         {
             OnControlAddedHandler?.Invoke(this, e);
         }

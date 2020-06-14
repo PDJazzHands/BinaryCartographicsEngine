@@ -1,9 +1,11 @@
 ﻿using BinaryCartographicsEngine.BCEngine.Forms.Text;
 using BinaryCartographicsEngine.BCEngine.Forms;
+using BinaryCartographicsEngine.BCEngine.Cursor;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using BinaryCartographicsEngine.BCEngine.Input;
 
 namespace BinaryCartographicsEngine
 {
@@ -14,11 +16,14 @@ namespace BinaryCartographicsEngine
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D Background;
+        Texture2D Cursor;
         TextFont GameFont;
-
+        Cursor2D RedPointer;
+        System.Random random;
         TextBox TextBox;
         TextBox FpsCounter;
-
+        TextBox CoordsChecker;
+        Color clearcol = Color.Black;
         Panel panel;
         Panel childPanel;
         Button button;
@@ -31,6 +36,7 @@ namespace BinaryCartographicsEngine
 
         protected override void Initialize()
         {
+            //IsMouseVisible = true;
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = 800;
             graphics.PreferredBackBufferHeight = 600;
@@ -45,17 +51,18 @@ namespace BinaryCartographicsEngine
              * another method of managing and rendering text is used */
 
             TextConvertor.Initialize();
-
+            random = new System.Random();
             Background = Content.Load<Texture2D>("TestContent/Background");
+            RedPointer = new Cursor2D(Content);
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //main panel
             panel = new Panel();
-            panel.Position = new Vector2(200, -100);
-            panel.Scale = new Vector2(0.9f, 1.2f);
+            panel.Position = new Vector2(0, 0);
+            panel.Scale = new Vector2(1f, 1f);
             panel.Background = Background;
-            panel.RotationDegrees = 45f;
+            panel.RotationDegrees = 24f;
 
             //child panel, pass in the main panel to access transform then add this to panel.controls to hook into update and draw methods
             childPanel = new Panel(panel);
@@ -65,12 +72,7 @@ namespace BinaryCartographicsEngine
             childPanel.Background = Background;
             panel.Controls.Add(childPanel);
 
-            //child button, pass in the main panel to access transform then add this to panel.controls to hook into update and draw methods
-            button = new Button(panel);
-            button.Position = new Vector2(200, 20);
-            button.Scale = new Vector2(0.5f, 0.5f);
-            button.Background = Background;
-            panel.Controls.Add(button);
+
 
             GameFont = new TextFont("BCGame/Fonts/taffer20x20", Content);
 
@@ -83,12 +85,50 @@ namespace BinaryCartographicsEngine
             TextBox.Write("HELLO WORLD?", Color.Goldenrod, Color.Purple);
             panel.Controls.Add(TextBox);
 
+            //Coords checker
+            //For displaying coordinates
+            CoordsChecker = new TextBox(GameFont, 30, 2, GraphicsDevice);
+            CoordsChecker.Position = new Vector2(400, 0);
+            CoordsChecker.Write("hello", Color.Green, Color.Red);
             //FPS text box, has no parent, will draw relative to the main window
             //FPScounter = new TextPanel(GameFont, Point.Zero , new Point(11, 1), GraphicsDevice);
             FpsCounter = new TextBox(GameFont, 20, 1, GraphicsDevice);
             // TODO: use this.Content to load your game content here
 
 
+            //child button, pass in the main panel to access transform then add this to panel.controls to hook into update and draw methods
+            button = new Button(panel, 50, 50);
+            button.Position = new Vector2(200, 20);
+            button.Scale = new Vector2(1f, 1f);
+            button.Background = Background;
+
+            button.MousePressHandler += SetBackgroundColor;
+            button.MouseDownHandler += RandomisePanelColor;
+            button.MouseHoverHandler += RamdomiseBGCol;
+            panel.Controls.Add(button);
+        }
+
+        Color randCol()
+        {
+            int r = random.Next(0, 255);
+            int g = random.Next(0, 255);
+            int b = random.Next(0, 255);
+            return new Color(r, g, b);
+        }
+
+        private void RamdomiseBGCol(object sender, System.EventArgs e)
+        {
+            clearcol = randCol();
+        }
+
+        private void RandomisePanelColor(object sender, System.EventArgs e)
+        {
+            childPanel.tint = randCol();
+        }
+
+        private void SetBackgroundColor(object sender, System.EventArgs e)
+        {
+            panel.tint = Color.Yellow;
         }
 
         protected override void UnloadContent()
@@ -103,11 +143,22 @@ namespace BinaryCartographicsEngine
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            InputManager.Update();
             // TODO: Add your update logic here
             panel.Update();
             FpsCounter.Clear();
             FpsCounter.Write("FPS: " + frameRate.ToString(), Color.Green, Color.Black);
+
+            Vector2 GlobalMousePos = InputManager.OldMouseState.Position.ToVector2();
+            Vector2 LocalMousePos = button.InverseTransformVector(GlobalMousePos);
+
+            CoordsChecker.Clear();
+            CoordsChecker.Write("X:" + (int)GlobalMousePos.X + ", y:" + (int)GlobalMousePos.Y + 
+                              "\nX:" + (int)LocalMousePos.X + ", y:" + (int)LocalMousePos.Y, 
+                              Color.Red, Color.Green);
+
+            RedPointer.Update();
+
             base.Update(gameTime);
         }
 
@@ -119,19 +170,29 @@ namespace BinaryCartographicsEngine
         {
             frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(clearcol);
             ///MAIN CONTROL GRAPHICS TESTS
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            panel.Draw(spriteBatch);
-            TextBox.Draw(spriteBatch);
-            FpsCounter.Draw(spriteBatch);
+            spriteBatch.Begin(SpriteSortMode.Immediate,
+      BlendState.AlphaBlend,
+      SamplerState.PointClamp,
+      null, null, null, null);
+
+                panel.Draw(spriteBatch);
+
+                CoordsChecker.Draw(spriteBatch);
+                FpsCounter.Draw(spriteBatch);
+
+            
             spriteBatch.End();
+
+
 
             ///BACKGROUND AND OTHER TESTS
             //GameTextPanel.Draw(spriteBatch);
             //FPScounter.Draw(spriteBatch);
 
 
+            RedPointer.Draw(spriteBatch);
             base.Draw(gameTime);
         }
     }

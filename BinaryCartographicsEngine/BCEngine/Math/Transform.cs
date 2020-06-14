@@ -87,5 +87,22 @@ namespace BinaryCartographicsEngine.BCEngine.Math
             result += Position;
             return result;
         }
+
+        public Vector2 InverseTransformVector(Vector2 point)
+        {
+            Vector2 result = point - WorldPosition;
+            result = Vector2.Transform(result, Matrix.CreateRotationZ(-WorldRotation));
+            result /= WorldScale;
+            return result;
+        }
+
+        public Vector2 GetRelativePosition(Vector2 WorldPosition)
+        {
+            Transform result = new Transform();
+            result.Position = WorldPosition * -WorldTransform.Position;
+            result.Rotation = -WorldTransform.Rotation;
+            result.Scale =    -WorldTransform.Scale;
+            return result.Position;
+        }
     }
 }

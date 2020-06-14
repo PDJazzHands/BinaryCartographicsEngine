@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace BinaryCartographicsEngine.BCEngine.Input
-{
-    class InputManager
+{ 
+    public static class InputManager
     {
+        public static KeyboardState OldKeyboardState { get; private set; }
+        public static KeyboardState KeyboardState { get; private set; }
+        public static MouseState OldMouseState { get; private set; }
+        public static MouseState MouseState { get; private set; }
+
+        public static void Update()
+        {
+            OldKeyboardState = KeyboardState;
+            KeyboardState = Keyboard.GetState();
+
+            OldMouseState = MouseState;
+            MouseState = Mouse.GetState();
+        }
     }
 }

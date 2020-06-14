@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BCEngine\BCEngine.cs" />
+    <Compile Include="BCEngine\Cursor\Cursor2D.cs" />
     <Compile Include="BCEngine\Forms\Button.cs" />
     <Compile Include="BCEngine\Forms\Container.cs" />
     <Compile Include="BCEngine\Forms\Control.cs" />
