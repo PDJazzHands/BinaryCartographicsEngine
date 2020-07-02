@@ -11,6 +11,7 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
 
         public Container() { }
         public Container(Transform Parent) : base(Parent) { }
+        public Container(Transform Parent, int Width, int Height) : base (Parent, Width, Height) { }
 
         public override void Update()
         {

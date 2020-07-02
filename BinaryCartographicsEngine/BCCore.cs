@@ -60,9 +60,11 @@ namespace BinaryCartographicsEngine
             //main panel
             panel = new Panel();
             panel.Position = new Vector2(0, 0);
-            panel.Scale = new Vector2(1f, 1f);
+            panel.Scale = new Vector2(0.5f, 2f);
+            panel.Width = 400;
+            panel.Height = 300;
             panel.Background = Background;
-            panel.RotationDegrees = 24f;
+            panel.RotationDegrees = 45f;
 
             //child panel, pass in the main panel to access transform then add this to panel.controls to hook into update and draw methods
             childPanel = new Panel(panel);

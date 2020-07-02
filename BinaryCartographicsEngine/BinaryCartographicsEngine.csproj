@@ -61,6 +61,7 @@
     <Compile Include="BCEngine\Math\Transform.cs" />
     <Compile Include="BCEngine\Utilities\Dictionaries\TwoWayDictionary.cs" />
     <Compile Include="BCCore.cs" />
+    <Compile Include="BCEngine\Utilities\TEST_FILES\PIXELCOLLIDE.cs" />
     <Compile Include="BCGame\BCGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

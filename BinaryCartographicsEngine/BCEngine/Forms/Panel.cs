@@ -9,6 +9,7 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
     {
         public Panel() { }
         public Panel(Transform Parent) : base(Parent) { }
+        public Panel(Transform Parent, int Width, int Height) : base(Parent, Width, Height) { }
 
         public Texture2D Background;
         public Color tint = Color.White;

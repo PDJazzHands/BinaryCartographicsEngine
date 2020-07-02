@@ -38,7 +38,7 @@ namespace BinaryCartographicsEngine.BCEngine.Forms
             if (Contains(this.LocalBounds, LocalMousePos))  //if mouse is over the button
             {
 
-
+                 
                 if (InputManager.MouseState.LeftButton == ButtonState.Pressed)
                 {
                     CurrentState = FormButtonState.PRESS;
