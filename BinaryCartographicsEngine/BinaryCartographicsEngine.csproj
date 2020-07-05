@@ -47,6 +47,8 @@
     <Compile Include="BCEngine\Forms\Button.cs" />
     <Compile Include="BCEngine\Forms\Container.cs" />
     <Compile Include="BCEngine\Forms\Control.cs" />
+    <Compile Include="BCEngine\Forms\ControlBase.cs" />
+    <Compile Include="BCEngine\Forms\DividerTypes.cs" />
     <Compile Include="BCEngine\Forms\Panel.cs" />
     <Compile Include="BCEngine\Forms\TextBox.cs" />
     <Compile Include="BCEngine\Forms\Text\Buffer.cs" />
